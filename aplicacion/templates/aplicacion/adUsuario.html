@@ -1,0 +1,184 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('{% static "aplicacion/img/foto111.jpeg" %}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white;
+        }
+
+        .navbar-nav .nav-link {
+            margin-right: 1rem;
+        }
+
+        .container {
+            background-color: rgba(48, 47, 47, 0.7);
+            padding: 2rem;
+            border-radius: 10px;
+            margin-top: 50px;
+        }
+
+        table {
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgba(48, 47, 47, 0.7);">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Panel de Administración</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'adUsuario' %}">Usuario</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'adPedidos' %}">Pedidos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'adVentas' %}">Ventas</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'adProductos' %}">Productos</a>
+                  </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'menu' %}">Página principal</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h1 class="mb-4 text-center">Panel de Administración</h1>
+
+        <div class="col-md-6">
+            <!-- Mostrar mensaje de éxito si existe -->
+            {% if exito %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ exito }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+        
+            <!-- Mostrar mensaje de error si existe -->
+            {% if error %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ error }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+        
+            <h2>Agregar Usuario</h2>
+            <form id="addUserForm" method="POST" action="{% url 'adUsuario' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="nombreUsuario" class="form-label">Nombre de Usuario</label>
+                    <input type="text" class="form-control" id="nombreUsuario" name="nombre_usuario" required>
+                </div>
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" required>
+                </div>
+                <div class="mb-3">
+                    <label for="contrasena" class="form-label">Contraseña</label>
+                    <div class="input-group">
+                        <input type="password" id="contrasena" name="contrasena" class="form-control" required>
+                    </div>
+                </div>
+                <button type="submit" name="agregar_usuario" class="btn btn-primary">Agregar Usuario</button>
+            </form>
+        </div>
+        
+        <div class="col-md-6">
+            <h2>Usuarios Administradores</h2>
+            <table id="userTable" class="table table-dark table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nombre de Usuario</th>
+                        <th>Nombre</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for usuario in usuarios_admin %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ usuario.username }}</td>
+                        <td>{{ usuario.first_name }}</td>
+                        <td>
+                            <!-- Botón para editar usuario -->
+                            <button type="button" class="btn btn-sm btn-primary editBtn" data-usuario-id="{{ usuario.id }}" data-usuario-nombre="{{ usuario.first_name }}">Editar</button>
+                            <!-- Formulario para eliminar usuario -->
+                            <form method="POST" action="{% url 'adUsuario' %}" class="d-inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="usuario_id" value="{{ usuario.id }}">
+                                <button type="submit" name="eliminar_usuario" class="btn btn-sm btn-danger">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Formulario para editar usuario (oculto por defecto) -->
+        <div id="editUserForm" class="container mt-5" style="display: none;">
+            <h2>Editar Usuario</h2>
+            <form id="editForm" method="POST" action="{% url 'adUsuario' %}">
+                {% csrf_token %}
+                <input type="hidden" id="editUserId" name="usuario_id">
+                <div class="mb-3">
+                    <label for="editNombre" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="editNombre" name="nuevo_nombre" required>
+                </div>
+                <button type="submit" name="editar_usuario" class="btn btn-primary">Guardar Cambios</button>
+            </form>
+        </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!-- Otros scripts JavaScript-->
+    <script>
+        $(document).ready(function () {
+            // Mostrar formulario de edición con los datos del usuario seleccionado
+            $('#userTable').on('click', '.editBtn', function () {
+                let userId = $(this).data('usuario-id');
+                let userName = $(this).data('usuario-nombre');
+    
+                $('#editUserId').val(userId);
+                $('#editNombre').val(userName);
+    
+                $('#editUserForm').show();
+    
+                // Desplazamiento suave hacia el formulario de edición
+                $('html, body').animate({
+                    scrollTop: $('#editUserForm').offset().top
+                }, 500);
+            });
+        });
+    </script>
+</body>
+
+</html>

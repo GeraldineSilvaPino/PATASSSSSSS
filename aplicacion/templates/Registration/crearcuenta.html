@@ -1,0 +1,147 @@
+{% load static %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FP&#128062;</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  
+  <style>
+    body {
+      background-image: url('{% static "aplicacion/img/foto111.jpeg" %}');
+      background-size: cover; 
+      background-position: center; 
+      background-repeat: no-repeat; 
+    }
+     
+    .error {
+      color: red;
+    }
+    
+    /* Estilo para la barra de navegación */
+    .navbar {
+      background-color: rgba(0, 0, 0, 0); /* Fondo transparente */
+      padding: 15px 0; /* Espaciado interno */
+    }
+
+    .navbar-brand,
+    .navbar-nav .nav-link {
+      color: white !important; /* Color de texto blanco para los enlaces */
+    }
+
+    .navbar-nav .nav-link:hover {
+      color: lightgray !important; /* Color de texto gris claro al pasar el mouse */
+    }
+
+    .navbar-dark .navbar-toggler-icon {
+      background-color: white; /* Color del icono del botón desplegable */
+    }
+
+    .navbar-toggler {
+      border-color: white; /* Color del borde del botón desplegable */
+    }
+
+    .navbar-collapse {
+      justify-content: flex-end; /* Alineación a la derecha */
+    }
+
+    /* Estilo para el contenedor del formulario */
+    .form-container {
+      background-color: rgba(0, 0, 0, 0.8); /* Fondo negro semi-transparente */
+      padding: 30px; /* Espacio interno para el contenido del formulario */
+      border-radius: 10px;
+      margin-top: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Sombra ligera */
+      max-width: 500px; /* Ancho máximo del contenedor */
+      margin: auto; /* Centrar el contenedor en la página */
+      color: white; /* Color de texto blanco */
+    }
+
+    .form-container h2 {
+      color: white; /* Color del título */
+    }
+
+    .form-container input[type="submit"],
+    .form-container a.btn {
+      margin-top: 15px; /* Espacio entre el formulario y los botones */
+    }
+
+    /* Estilo para los mensajes de error */
+    .form-container .error-message {
+      color: red; /* Color de texto rojo para los mensajes de error */
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="{% url 'menu' %}">Fundación Patitas&#128062;</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a id="bottom" class="nav-link" href="{% url 'menu' %}">Gatitos Disponibles</a>
+            </li>
+            {% if perms.aplicacion.add_permission %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url "adPedidos" %}">Administrar</a>
+            </li>
+            {% endif %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'cuarto' %}">Quiénes somos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'tercero' %}">Contacto</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'formulario' %}">Da un gato en adopcion</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'carro' %}">Accesorio de mascotas</a>
+            </li>
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+                <a class="nav-link text-bg-primary" href="">{{user.username}}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-bg-primary" href="{% url 'salir' %}">Cerrar Sesión</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link text-bg-primary" href="{% url 'login' %}">Iniciar Sesión</a>
+            </li>
+            {% endif %}                
+        </ul>
+    </div>
+</nav>
+  <div class="container">
+    <div class="form-container">
+      <h2 class="text-center">Registro de Usuario</h2>
+      {% if alerta %}
+        <div class="alert alert-danger">{{ alerta }}</div>
+      {% endif %}
+      <form action="{% url 'crearcuenta' %}" method="POST">
+        {% csrf_token %}
+        {{ form | crispy }}
+        <div class="text-center mt-3">
+          <input type="submit" value="Registrarse" class="btn btn-primary w-100">
+        </div>
+        <div class="text-center mt-3">
+          <a href="{% url 'login' %}" class="btn btn-primary w-100">Login</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts de Bootstrap (jQuery y Popper.js necesarios) -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha384-UPKwk2+1j3TCY8e2v8Wz90pZ2KMQ1AA00G4P1a8J3q+mhZ3QXzdxqexByRT4zC5q" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLuJlO8rW/jpWq5lZ+q25Pd9Jf/Ta5KVT1GGArDH7Qp/vzHVsi9g6L4N6" crossorigin="anonymous"></script>
+</body>
+
+</html>

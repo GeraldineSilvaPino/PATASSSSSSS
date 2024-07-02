@@ -1,0 +1,269 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FP&#128062;</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .precio{
+            font-family: 'Space Grotesk', sans-serif;
+            color: rgb(255, 255, 255);
+        }
+        .card-text{
+            font-family: 'Space Grotesk', sans-serif;
+            color: rgb(255, 255, 255);
+        }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #141C29;
+            color: rgb(15, 2, 2);
+        }
+        .navbar-brand, .nav-link {
+            font-family: 'Montserrat', sans-serif;
+        }
+        .carrito {
+            filter: invert(100%);
+            width: 45px;
+            height: auto;
+        }
+        .card {
+            background-color: #2D4263;
+            border: none;
+        }
+        .card img {
+            border-radius: 20px 20px 0 0;
+        }
+        .card-body {
+            text-align: center;
+        }
+        .card .precio {
+            margin-top: 5px;
+            font-weight: bold;
+        }
+        .btn-warning {
+            background-color: #f39c12;
+            border: none;
+        }
+        .btn-warning:hover {
+            background-color: #e67e22;
+        }
+        header {
+            background-color: #141C29;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="{% url 'menu' %}">Fundación Patitas&#128062;</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a id="bottom" class="nav-link" href="{% url 'menu' %}">Gatitos Disponibles</a>
+                </li>
+                {% if perms.aplicacion.add_permission %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url "adPedidos" %}">Administrar</a>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'cuarto' %}">Quiénes somos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'tercero' %}">Contacto</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'formulario' %}">Da un gato en adopcion</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'carro' %}">Accesorio de mascotas</a>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link text-bg-primary" href="">{{user.username}}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-bg-primary" href="{% url 'salir' %}">Cerrar Sesión</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link text-bg-primary" href="{% url 'login' %}">Iniciar Sesión</a>
+                </li>
+                {% endif %}                
+            </ul>
+        </div>
+    </nav>
+    <header id="header">
+        <img class="carrito" src="{% static "aplicacion/img/carro.png" %}" alt="carrito">
+        <a href="{% url 'factura' %}" class="btn btn-primary">ver carro</a>
+    </header>
+    <div id="contenedor1" class="container mt-5 pt-5">
+        <div class="row">
+            <div class="col-md-4 col-sm-6 mb-4">
+                <div class="card">
+                    <img src="{% static "aplicacion/img/cama.webp" %}" class="card-img-top" alt="producto 1">
+                    <div class="card-body">
+                        <p class="card-text">Camas para animales</p>
+                        <p class="precio">$80<span>.000</span></p>
+                        <button class="btn btn-warning" data-toggle="modal" data-target="#agregarProductoModal" data-nombre="Cama para animales" data-precio="80000">Comprar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 mb-4">
+                <div class="card">
+                    <img src="{% static "aplicacion/img/cepillo.jpeg" %}" class="card-img-top" alt="producto 2">
+                    <div class="card-body">
+                        <p class="card-text">Cepillos</p>
+                        <p class="precio">$10<span>.000</span></p>
+                        <button class="btn btn-warning" data-toggle="modal" data-target="#agregarProductoModal" data-nombre="Cepillos" data-precio="10000">Comprar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 mb-4">
+                <div class="card">
+                    <img src="{% static "aplicacion/img/correa.png" %}" class="card-img-top" alt="producto 3">
+                    <div class="card-body">
+                        <p class="card-text">Correas</p>
+                        <p class="precio">$12<span>.990</span></p>
+                        <button class="btn btn-warning" data-toggle="modal" data-target="#agregarProductoModal" data-nombre="Correas" data-precio="12990">Comprar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 mb-4">
+                <div class="card">
+                    <img src="{% static "aplicacion/img/juguete.webp" %}" class="card-img-top" alt="producto 4">
+                    <div class="card-body">
+                        <p class="card-text">Juguetes</p>
+                        <p class="precio">$15<span>.000</span></p>
+                        <button class="btn btn-warning" data-toggle="modal" data-target="#agregarProductoModal" data-nombre="Juguetes" data-precio="15000">Comprar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 mb-4">
+                <div class="card">
+                    <img src="{% static "aplicacion/img/rescador.jpg" %}" class="card-img-top" alt="producto 5">
+                    <div class="card-body">
+                        <p class="card-text">Rascador</p>
+                        <p class="precio">$35<span>.990</span></p>
+                        <button class="btn btn-warning" data-toggle="modal" data-target="#agregarProductoModal" data-nombre="Rascador" data-precio="35990">Comprar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 mb-4">
+                <div class="card">
+                    <img src="{% static "aplicacion/img/sujetador.jpg" %}" class="card-img-top" alt="producto 6">
+                    <div class="card-body">
+                        <p class="card-text">Arnes</p>
+                        <p class="precio">$5<span>.000</span></p>
+                        <button class="btn btn-warning" data-toggle="modal" data-target="#agregarProductoModal" data-nombre="Arnes" data-precio="5000">Comprar</button>
+                    </div>
+                </div>
+            </div>
+            {% for producto in productos %}
+            <div class="col-md-4 col-sm-6 mb-4">
+                <div class="card">
+                    <img src="{{ producto.imagen.url }}" class="card-img-top" alt="{{ producto.nombre }}">
+                    <div class="card-body">
+                        <p class="card-text">{{ producto.nombre }}</p>
+                        <p class="precio">${{ producto.precio }}</p>
+                        <button class="btn btn-warning" data-toggle="modal" data-target="#agregarProductoModal" data-nombre="{{ producto.nombre }}" data-precio="{{ producto.precio }}">Comprar</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="modal fade" id="agregarProductoModal" tabindex="-1" role="dialog" aria-labelledby="agregarProductoModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="agregarProductoModalLabel">Agregar Producto al Carrito</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Seleccione la cantidad que desea agregar al carrito:</p>
+                    <input type="number" id="cantidadProducto" min="1" max="10" value="1">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="confirmarAgregarProducto">Agregar al Carrito</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Capturar datos del producto al abrir el modal
+            $('#agregarProductoModal').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget);
+                var nombre = button.data('nombre');
+                var precio = button.data('precio');
+                var modal = $(this);
+                modal.find('#confirmarAgregarProducto').data('nombre', nombre);
+                modal.find('#confirmarAgregarProducto').data('precio', precio);
+            });
+
+            $('#confirmarAgregarProducto').click(function() {
+                // Obtener cantidad seleccionada y datos del producto
+                let cantidad = parseInt($('#cantidadProducto').val());
+                let nombre = $(this).data('nombre');
+                let precio = parseInt($(this).data('precio'));
+
+                // Lógica para agregar el producto al carrito
+                addToCart(nombre, precio, cantidad);
+
+                // Cerrar el modal
+                $('#agregarProductoModal').modal('hide');
+            });
+
+            function addToCart(name, price, quantity) {
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                let existingProduct = cart.find(product => product.name === name);
+
+                if (existingProduct) {
+                    existingProduct.quantity += quantity;
+                    if (existingProduct.quantity > 10) existingProduct.quantity = 10;
+                } else {
+                    cart.push({ name: name, price: price, quantity: quantity });
+                }
+
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCart();
+            }
+
+            function updateCart() {
+                // Actualizar la visualización del carrito (si es necesario)
+            }
+        });
+    </script>
+    <style>
+        body {
+            background-image: url('{% static "aplicacion/img/foto111.jpeg" %}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+    </style>
+    <br><br>
+    <br><br>
+    <br>
+    <footer class="bg-dark text-light text-center py-3 fixed-bottom">
+        <p>&copy; 2024 Fundación Patitas&#128062;</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,183 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FP&#128062;</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-image: url('{% static "aplicacion/img/foto111.jpeg" %}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            padding: 20px;
+        }
+        form {
+            width: 50%;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="{% url 'menu' %}">Fundación Patitas&#128062;</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a id="bottom" class="nav-link" href="{% url 'menu' %}">Gatitos Disponibles</a>
+                </li>
+                {% if perms.aplicacion.add_permission %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url "adPedidos" %}">Administrar</a>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'cuarto' %}">Quiénes somos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'tercero' %}">Contacto</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'formulario' %}">Da un gato en adopcion</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'carro' %}">Accesorio de mascotas</a>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link text-bg-primary" href="">{{user.username}}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-bg-primary" href="{% url 'salir' %}">Cerrar Sesión</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link text-bg-primary" href="{% url 'login' %}">Iniciar Sesión</a>
+                </li>
+                {% endif %}                
+            </ul>
+        </div>
+    </nav>
+<h2>Registro de Tarjeta</h2>
+
+<div id="orderTotal"></div>
+
+<form id="cardRegistrationForm" onsubmit="saveCardData(event)">
+    <div class="form-group">
+        <label for="paymentType">Tipo de Pago:</label>
+        <select id="paymentType" name="paymentType" required>
+            <option value="creditCard">Tarjeta de Crédito</option>
+            <option value="debitCard">Tarjeta de Débito</option>
+            <option value="paypal">PayPal</option>
+            <option value="bankTransfer">Transferencia Bancaria</option>
+        </select>
+    </div>
+
+    <div id="cardDetails" style="display:none;">
+        <div class="form-group">
+            <label for="cardNumber">Número de Tarjeta:</label>
+            <input type="text" id="cardNumber" name="cardNumber" pattern="\d{16}" title="Debe contener 16 dígitos">
+        </div>
+        <div class="form-group">
+            <label for="expiryDate">Fecha de Expiración:</label>
+            <input type="month" id="expiryDate" name="expiryDate">
+        </div>
+        <div class="form-group">
+            <label for="cvv">CVV:</label>
+            <input type="text" id="cvv" name="cvv" pattern="\d{3}" title="Debe contener 3 dígitos">
+        </div>
+    </div>
+
+    <button type="submit" class="btn">PAGAR</button>
+    <div id="data-url" data-pago-url="{% url 'menu' %}"></div>
+</form>
+
+<script>
+    document.getElementById("paymentType").addEventListener("change", function() {
+        var cardDetails = document.getElementById("cardDetails");
+        var inputs = cardDetails.querySelectorAll("input");
+
+        if (this.value === "creditCard" || this.value === "debitCard") {
+            cardDetails.style.display = "block";
+            inputs.forEach(input => input.setAttribute("required", "required"));
+        } else {
+            cardDetails.style.display = "none";
+            inputs.forEach(input => input.removeAttribute("required"));
+        }
+    });
+
+    function displayOrderTotal() {
+        let total = localStorage.getItem('total');
+        document.getElementById("orderTotal").innerText = `Total del Pedido: $${total}`;
+    }
+
+    function saveCardData(event) {
+        event.preventDefault();
+        
+        let cardData = {
+            cardNumber: document.getElementById("cardNumber").value,
+            expiryDate: document.getElementById("expiryDate").value,
+            cvv: document.getElementById("cvv").value
+        };
+
+        // Guardar los datos de la tarjeta en localStorage
+        localStorage.setItem("cardData", JSON.stringify(cardData));
+
+        // Mostrar un mensaje de éxito y redirigir a la página principal
+        alert("¡Felicidades, tu compra se ha realizado con éxito!");
+
+        // Obtener la URL desde el atributo data
+        const pagoUrl = document.getElementById('data-url').dataset.pagoUrl;
+        console.log("Redirigiendo a:", pagoUrl); // Agregar un log para verificar la URL
+
+        // Redirigir a la página principal
+        window.location.href = pagoUrl;
+    }
+
+    // Mostrar el total del pedido al cargar la página
+    displayOrderTotal();
+</script>
+
+</body>
+</html>
