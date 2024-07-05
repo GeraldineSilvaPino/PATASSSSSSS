@@ -15,39 +15,41 @@
                <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a id="bottom" class="nav-link" href="{% url 'menu' %}">Gatitos Disponibles</a>
-                    </li>
-                    {% if perms.aplicacion.add_permission %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url "adPedidos" %}">Administrar</a>
-                    </li>
-                    {% endif %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'cuarto' %}">Quiénes somos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'tercero' %}">Contacto</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'formulario' %}">Da un gato en adopcion</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'carro' %}">Accesorio de mascotas</a>
-                    </li>
-                    {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link text-bg-primary" href="">{{user.username}}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-bg-primary" href="{% url 'salir' %}">Cerrar Sesión</a>
-                    </li>
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link text-bg-primary" href="{% url 'login' %}">Iniciar Sesión</a>
-                    </li>
-                    {% endif %}               
+                <li class="nav-item">
+                    <a id="bottom" class="nav-link" href="{% url 'menu' %}">Gatitos Disponibles</a>
+                </li>
+                {% if perms.aplicacion.add_permission %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url "adPedidos" %}">Administrar</a>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'cuarto' %}">Quiénes somos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'tercero' %}">Contacto</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'formulario' %}">Da un gato en adopcion</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'carro' %}">Accesorio de mascotas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'ver_pedidos' %}">Mis pedidos</a>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link text-bg-primary" href="">{{user.username}}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-bg-primary" href="{% url 'salir' %}">Cerrar Sesión</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link text-bg-primary" href="{% url 'login' %}">Iniciar Sesión</a>
+                </li>
+                {% endif %}                 
             </div>
         </div>
     </nav>

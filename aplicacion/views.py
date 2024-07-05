@@ -211,4 +211,11 @@ def editarproducto(request, id):
 @login_required
 def ver_pedidos(request):
     compras = Compra.objects.filter(user=request.user).order_by('-created_at')
+    for compra in compras:
+        for item in compra.items.all():
+            try:
+                producto = Producto.objects.get(nombre=item.producto_name)
+                item.producto_imagen = producto.imagen.url
+            except Producto.DoesNotExist:
+                item.producto_imagen = None
     return render(request, 'aplicacion/ver_pedidos.html', {'compras': compras})

@@ -42,7 +42,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a id="bottom" class="nav-link" href="#">Gatitos Disponibles</a>
+                        <a id="bottom" class="nav-link" href="{% url 'menu' %}">Gatitos Disponibles</a>
                     </li>
                     {% if perms.aplicacion.add_permission %}
                     <li class="nav-item">
@@ -61,6 +61,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'carro' %}">Accesorio de mascotas</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ver_pedidos' %}">Mis pedidos</a>
+                    </li>
                     {% if user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link text-bg-primary" href="">{{user.username}}</a>
@@ -72,7 +75,7 @@
                     <li class="nav-item">
                         <a class="nav-link text-bg-primary" href="{% url 'login' %}">Iniciar Sesión</a>
                     </li>
-                    {% endif %}
+                    {% endif %}  
                 </ul>
             </div>
         </div>

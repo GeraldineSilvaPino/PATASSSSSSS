@@ -37,6 +37,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'carro' %}">Accesorio de mascotas</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'ver_pedidos' %}">Mis pedidos</a>
+                </li>
                 {% if user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link text-bg-primary" href="">{{user.username}}</a>
@@ -48,7 +51,7 @@
                 <li class="nav-item">
                     <a class="nav-link text-bg-primary" href="{% url 'login' %}">Iniciar Sesión</a>
                 </li>
-                {% endif %}           
+                {% endif %}             
             </ul>
         </div>
   
