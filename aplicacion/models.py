@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User  # Si estás utilizando el modelo User de Django
+from django.contrib.auth.models import User  # Si estás utilizando el modelo User de Djangoo
 
 class Compra(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
