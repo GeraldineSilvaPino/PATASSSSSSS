@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mis Pedidos</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <h1>Mis Pedidos</h1>
+    <div class="container">
+        {% if compras %}
+            <ul>
+                {% for compra in compras %}
+                    <li>
+                        <strong>Compra ID:</strong> {{ compra.id }}<br>
+                        <strong>Fecha:</strong> {{ compra.created_at }}<br>
+                        <strong>Total:</strong> ${{ compra.total }}<br>
+                        <strong>Detalles:</strong>
+                        <ul>
+                            {% for item in compra.items.all %}
+                                <li>
+                                    {{ item.quantity }} x {{ item.producto_name }} - ${{ item.price }} c/u
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No tienes pedidos.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -207,3 +207,8 @@ def editarproducto(request, id):
     else:
         form = ProductoForm(instance=producto)
     return render(request, 'aplicacion/editarproducto.html', {'form': form, 'producto': producto})
+
+@login_required
+def ver_pedidos(request):
+    compras = Compra.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'aplicacion/ver_pedidos.html', {'compras': compras})
